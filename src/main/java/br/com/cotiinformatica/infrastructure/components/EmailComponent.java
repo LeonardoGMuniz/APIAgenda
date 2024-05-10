@@ -1,6 +1,5 @@
 package br.com.cotiinformatica.infrastructure.components;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,10 +9,8 @@ import org.springframework.stereotype.Component;
 import br.com.cotiinformatica.domain.dtos.EmailDto;
 import jakarta.mail.internet.MimeMessage;
 
-
 @Component
 public class EmailComponent {
-
 
 	/*
 	 * Componente do Spring Mail para realizar envio de emails 
@@ -32,29 +29,19 @@ public class EmailComponent {
 	/*
 	 * Criar o método para fazer o envio do email
 	 */
-	public void send(EmailDto dto)  throws Exception {
+	public void send(EmailDto dto) throws Exception {
 		
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
 		
-			
-			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
-			
-			helper.setFrom(userName); //remetente da mensagem
-			helper.setTo(dto.getDestionatario()); //destinatário da mensagem
-			helper.setSubject(dto.getAssunto()); //assunto
-			helper.setText(dto.getMensagem()); //texto da mensagem
-			
-			javaMailSender.send(mimeMessage); //enviando a mensagem
-		}
+		helper.setFrom(userName); //remetente da mensagem
+		helper.setTo(dto.getDestinatario()); //destinatário da mensagem
+		helper.setSubject(dto.getAssunto()); //assunto
+		helper.setText(dto.getMensagem()); //texto da mensagem
 		
+		javaMailSender.send(mimeMessage); //enviando a mensagem
+	}
 }
-
-
-
-
-
-
-
 
 
 

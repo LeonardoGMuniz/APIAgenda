@@ -1,6 +1,5 @@
 package br.com.cotiinformatica.infrastructure.components;
 
-
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -15,10 +14,8 @@ import br.com.cotiinformatica.domain.dtos.EmailDto;
 import br.com.cotiinformatica.domain.entities.LogMensagem;
 import br.com.cotiinformatica.infrastructure.repositories.LogMensagemRepository;
 
-
 @Component
 public class EmailConsumerComponent {
-
 
 	@Autowired
 	private EmailComponent emailComponent;
@@ -56,7 +53,5 @@ public class EmailConsumerComponent {
 			//gravar o log no banco de dados
 			logMensagemRepository.save(logMensagem);
 		}
-	
-}}
-
-
+	}
+}

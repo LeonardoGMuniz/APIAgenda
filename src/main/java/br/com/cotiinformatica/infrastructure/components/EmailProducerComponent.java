@@ -10,30 +10,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.cotiinformatica.domain.dtos.EmailDto;
 
 @Component
-
 public class EmailProducerComponent {
-	
-	@Autowired 
-	
+
+	@Autowired
 	private RabbitTemplate rabbitTemplate;
 	
-	@Autowired 
+	@Autowired
 	private ObjectMapper objectMapper;
 	
 	@Autowired
 	private Queue queue;
 	
-	
-	public void sendMessage(EmailDto dto) throws Exception{
+	/*
+	 * Método para receber um objeto DTO contendo uma mensagem de email
+	 * e gravar este objeto em uma fila do RabbitMQ
+	 */
+	public void sendMessage(EmailDto dto) throws Exception {
 		
+		//serializando os dados do dto para formato JSON
 		String data = objectMapper.writeValueAsString(dto);
 		
-		rabbitTemplate.convertAndSend(queue.getName(),data);
-		
-		
-		
-}
-	
-	
-
+		//gravando a mensagen na fila
+		rabbitTemplate.convertAndSend(queue.getName(), data);
+	}
 }

@@ -9,18 +9,19 @@ import org.springframework.stereotype.Repository;
 import br.com.cotiinformatica.domain.entities.Pessoa;
 
 @Repository
-
 public interface PessoaRepository extends MongoRepository<Pessoa, UUID> {
-	
-	
-	
-	@Query("{'email': ?0 }")
+
+	/*
+	 * Método para consultar 1 pessoa no banco de dados
+	 * do MongoDB através do email informado
+	 */
+	@Query("{ 'email' : ?0 }")
 	Pessoa findByEmail(String email);
 	
-	
-	
-	
-	@Query("{'email': ?0, 'senha': ?1}")
-	Pessoa findByEmailAndSenha(String email,String senha );
-	
+	/*
+	 * Método para consultar 1 pessoa no banco de dados
+	 * do MongoDB através do email e da senha informada
+	 */
+	@Query("{ 'email' : ?0, 'senha' : ?1 }")
+	Pessoa findByEmailAndSenha(String email, String senha);
 }

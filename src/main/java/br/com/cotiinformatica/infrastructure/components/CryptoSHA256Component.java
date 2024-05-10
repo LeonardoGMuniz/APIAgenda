@@ -1,13 +1,19 @@
 package br.com.cotiinformatica.infrastructure.components;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import org.springframework.stereotype.Component;
+
 @Component
 public class CryptoSHA256Component {
+
 	public String encrypt(String value) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
+
 			byte[] hashedBytes = md.digest(value.getBytes());
+
 			StringBuilder hexString = new StringBuilder();
 			for (byte b : hashedBytes) {
 				String hex = Integer.toHexString(0xff & b);
@@ -23,6 +29,3 @@ public class CryptoSHA256Component {
 		}
 	}
 }
-
-
-

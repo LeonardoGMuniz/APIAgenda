@@ -8,12 +8,6 @@ import org.springframework.stereotype.Repository;
 import br.com.cotiinformatica.domain.entities.LogMensagem;
 
 @Repository
-
 public interface LogMensagemRepository extends MongoRepository<LogMensagem, UUID> {
-	
-	
-	
-	
-	
 
 }

@@ -22,87 +22,96 @@ import br.com.cotiinformatica.infrastructure.components.TokenComponent;
 import br.com.cotiinformatica.infrastructure.repositories.PessoaRepository;
 
 @Service
-
 public class PessoaDomainServiceImpl implements PessoaDomainService {
 
 	@Autowired
+	private PessoaRepository pessoaRepository;
+	
+	@Autowired
+	private CryptoSHA256Component cryptoSHA256Component;
+	
+	@Autowired
 	private ModelMapper modelMapper;
-
+	
 	@Autowired
 	private EmailProducerComponent emailProducerComponent;
 	
 	@Autowired
 	private TokenComponent tokenComponent;
-
-	@Autowired
-	private PessoaRepository pessoaRepository;
-
-	@Autowired
-	private CryptoSHA256Component cryptoSHA256Component;
-
+	
 	@Override
 	public CriarPessoaResponseDto criar(CriarPessoaRequestDto dto) {
-		
-		
-		
 
-		if (pessoaRepository.findByEmail(dto.getEmail()) != null)
+		//REGRA: Não permitir email duplicado
+		if(pessoaRepository.findByEmail(dto.getEmail()) != null)
 			throw new EmailJaCadastradoException();
+		
+		//Preencher os dados da pessoa
 		Pessoa pessoa = new Pessoa();
-
+		
 		pessoa.setId(UUID.randomUUID());
-		pessoa.setEmail(dto.getEmail());
 		pessoa.setNome(dto.getNome());
+		pessoa.setEmail(dto.getEmail());
 		pessoa.setSenha(cryptoSHA256Component.encrypt(dto.getSenha()));
-		// TODO Auto-generated method stub
-
+		
+		//Gravar no banco de dados
 		pessoaRepository.save(pessoa);
-
+		
+		//Enviando o email de boas vindas
 		enviarEmailDeBoasVindas(pessoa);
-
+			
+		//Copiar os dados de pessoa para o objeto 'CriarPessoaResponseDto'
 		CriarPessoaResponseDto response = modelMapper.map(pessoa, CriarPessoaResponseDto.class);
 		response.setDataHoraCadastro(new Date());
-
-		return response;
+		
+		return response; //retornando os dados
 	}
 	
-	
-	
-	
-	
-
 	@Override
-	public AutenticarPessoaResponseDto autenticar (AutenticarPessoaRequestDto dto) {
+	public AutenticarPessoaResponseDto autenticar(AutenticarPessoaRequestDto dto) {
+
+		//buscar o registro da pessoa no banco de dados através do email e da senha
+		Pessoa pessoa = pessoaRepository.findByEmailAndSenha
+				(dto.getEmailAcesso(), cryptoSHA256Component.encrypt(dto.getSenhaAcesso()));
 		
-		Pessoa pessoa = pessoaRepository.findByEmailAndSenha(dto.getEmailAcesso(),cryptoSHA256Component.encrypt(dto.getSenhaAcesso()));
-		 if(pessoa==null)
-			 throw new AcessoNegadoException();
-		 
-		 AutenticarPessoaResponseDto response = modelMapper.map(pessoa,AutenticarPessoaResponseDto.class);
-		 response.setAccessToken(tokenComponent.generateToken(pessoa.getId()));
+		//verificar se pessoa não foi encontrado
+		if(pessoa == null)
+			throw new AcessoNegadoException();
 		
-		// TODO Auto-generated method stub
+		//copiando os dados de pessoa para a classe response
+		AutenticarPessoaResponseDto response = modelMapper.map(pessoa, AutenticarPessoaResponseDto.class);
+		response.setAccessToken(tokenComponent.generateToken(pessoa.getId()));
+				
 		return response;
-
 	}
-
+	
+	/*
+	 * Método para escrever o email de boas vindas da pessoa
+	 */
 	private void enviarEmailDeBoasVindas(Pessoa pessoa) {
-
+		
 		String to = pessoa.getEmail();
-		String subject = "Seja Bem vinda ao Sistema de Agenda -Coti Informática.";
-		String body = "Olá," + pessoa.getNome() + "\nSua conta foi criada com sucesso no sistema de Agenda de tarefas"
-				+ "\nSeja bem vindo!" + "\n\nAtt," + "\nEquipe Coti Informática";
+		String subject = "Seja bem vindo ao sistema de Agenda - COTI Informática.";
+		String body = "Olá, " + pessoa.getNome()
+				    + "\nSua conta foi criada com sucesso no sistema de Agenda de tarefas"
+				    + "\nSeja bem vindo!"
+				    + "\n\nAtt, "
+				    + "\nEquipe COTI Informática";
+		
 		EmailDto dto = new EmailDto();
-		dto.setDestionatario(to);
-		dto.setAssunto(to);
+		dto.setDestinatario(to);
+		dto.setAssunto(subject);
 		dto.setMensagem(body);
-
+		
 		try {
-
 			emailProducerComponent.sendMessage(dto);
-
-		} catch (Exception e) {
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 }
+
+
+
+

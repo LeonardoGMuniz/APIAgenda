@@ -1,13 +1,11 @@
 package br.com.cotiinformatica.application.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import br.com.cotiinformatica.domain.dtos.AutenticarPessoaRequestDto;
 import br.com.cotiinformatica.domain.dtos.AutenticarPessoaResponseDto;
@@ -16,11 +14,9 @@ import br.com.cotiinformatica.domain.dtos.CriarPessoaResponseDto;
 import br.com.cotiinformatica.domain.interfaces.PessoaDomainService;
 import jakarta.validation.Valid;
 
-
 @RestController
 @RequestMapping(value = "/api/pessoas")
 public class PessoaController {
-
 
 	@Autowired
 	private PessoaDomainService pessoaDomainService;
@@ -37,8 +33,3 @@ public class PessoaController {
 		return ResponseEntity.status(200).body(response);
 	}
 }
-
-
-
-
-

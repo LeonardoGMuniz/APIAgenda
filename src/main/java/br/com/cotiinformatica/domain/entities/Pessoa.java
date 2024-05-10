@@ -9,15 +9,11 @@ import lombok.Data;
 
 @Data
 @Document
-
-
 public class Pessoa {
-	
+
 	@Id
 	private UUID id;
 	private String nome;
 	private String email;
 	private String senha;
-	
-
 }

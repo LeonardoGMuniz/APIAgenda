@@ -12,12 +12,9 @@ import lombok.Data;
 
 @Data
 @Document
-
 public class Tarefa {
-	
-	
+
 	@Id
-	
 	private UUID id;
 	private String nome;
 	private LocalDate data;
@@ -26,5 +23,4 @@ public class Tarefa {
 	
 	@DBRef
 	private Pessoa pessoa;
-	
 }

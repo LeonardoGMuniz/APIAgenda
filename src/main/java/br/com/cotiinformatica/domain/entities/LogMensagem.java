@@ -10,18 +10,12 @@ import lombok.Data;
 
 @Data
 @Document
+public class LogMensagem {
 
-public class LogMensagem {   
-	
 	@Id
 	private UUID id;
-	private String Status;
+	private String status;
 	private LocalTime dataHora;
-	private String erro ;
 	private String mensagem;
-	
-	
-	
-	
-
+	private String erro;
 }
